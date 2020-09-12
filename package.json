@@ -8,6 +8,7 @@
     "lint": "tslint -p tsconfig.json -c tslint.json"
   },
   "dependencies": {
+    "@types/express-jwt": "^0.0.42",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
@@ -17,6 +18,7 @@
     "dotenv": "^8.2.0",
     "envalid": "^6.0.2",
     "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
     "helmet": "^4.1.0",
     "hpp": "^0.2.3",
     "jest": "^26.4.2",

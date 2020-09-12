@@ -15,6 +15,8 @@ class AuthRoute implements Route {
   }
 
   private initializeRoutes() {
+    this.router.post(`${this.path}/anonymous`, this.authController.anonymousLogin);
+    this.router.post(`${this.path}/fuckup`, authMiddleware);
     this.router.post(`${this.path}/signup`, validationMiddleware(CreateUserDto), this.authController.signUp);
     this.router.post(`${this.path}/login`, validationMiddleware(CreateUserDto), this.authController.logIn);
     this.router.post(`${this.path}/logout`, authMiddleware, this.authController.logOut);

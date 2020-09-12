@@ -5,10 +5,13 @@ import * as helmet from 'helmet';
 import * as hpp from 'hpp';
 import * as mongoose from 'mongoose';
 import * as logger from 'morgan';
+import * as bcrypt from 'bcrypt';
 import Routes from './interfaces/routes.interface';
 import errorMiddleware from './middlewares/error.middleware';
-import resModel from './models/res.model';
+import restaurantModel from './models/restaurant.model';
 
+// https://www.npmjs.com/package/typescript-express-starter
+// npm install typescript-express-starter
 class App {
   public app: express.Application;
   public port: (string | number);
@@ -16,22 +19,12 @@ class App {
 
   constructor(routes: Routes[]) {
     this.app = express();
-    this.port = process.env.PORT || 3000;
+    this.port = process.env.PORT || 8888;
     this.env = process.env.NODE_ENV === 'production' ? true : false;
-
     this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
-    resModel.find((err, res) => {
-      if (err) {
-        console.log(`야임마! 난 ${err} 에러야!`);
-      } else {
-        res.forEach((value1, index, array) => {
-          console.log(value1);
-        });
-      }
-    });
   }
 
   public listen() {
@@ -49,12 +42,13 @@ class App {
       this.app.use(hpp());
       this.app.use(helmet());
       this.app.use(logger('combined'));
-      this.app.use(cors({origin: 'your.domain.com', credentials: true}));
+      this.app.use(cors({exposedHeaders: 'Authorization', credentials: true}));
+      // this.app.use(cors({origin: 'your.domain.com', credentials: true}));
     } else {
       this.app.use(logger('dev'));
-      this.app.use(cors({origin: true, credentials: true}));
+      this.app.use(cors());
+      // this.app.use(cors({origin: true, credentials: true}));
     }
-
     this.app.use(express.json());
     this.app.use(express.urlencoded({extended: true}));
     this.app.use(cookieParser());

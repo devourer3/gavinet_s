@@ -7,6 +7,18 @@ import { RequestWithUser } from '../interfaces/auth.interface';
 class AuthController {
   public authService = new AuthService();
 
+  public anonymousLogin = async (req: Request, res: Response, next: NextFunction) => {
+    const anonymousData = req.body;
+    try {
+      const token: string = await this.authService.anonymousLogin(anonymousData);
+      res.setHeader('Authorization', token);
+      res.status(201).json({ message: 'validate' });
+    } catch (error) {
+      next(error);
+    }
+
+  }
+
   public signUp = async (req: Request, res: Response, next: NextFunction) => {
     const userData: CreateUserDto = req.body;
 
@@ -20,7 +32,6 @@ class AuthController {
 
   public logIn = async (req: Request, res: Response, next: NextFunction) => {
     const userData: CreateUserDto = req.body;
-
     try {
       const { cookie, findUser } = await this.authService.login(userData);
       res.setHeader('Set-Cookie', [cookie]);

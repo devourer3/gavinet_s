@@ -1,22 +1,22 @@
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from '../dtos/users.dto';
+import {CreateUserDto} from '../dtos/users.dto';
 import HttpException from '../exceptions/HttpException';
-import { User } from '../interfaces/users.interface';
+import {User} from '../interfaces/users.interface';
 import userModel from '../models/users.model';
-import { isEmptyObject } from '../utils/util';
+import {isEmptyObject} from '../utils/util';
 
 class UserService {
   public users = userModel;
 
   public async findAllUser(): Promise<User[]> {
-    const users: User[] = await this.users.find();
-    return users;
+    // const users: User[] = await this.users.find();
+    // return users;
+    return this.users.find();
   }
 
   public async findUserById(userId: string): Promise<User> {
     const findUser: User = await this.users.findById(userId);
     if (!findUser) throw new HttpException(409, "You're not user");
-
     return findUser;
   }
 
@@ -27,8 +27,7 @@ class UserService {
     if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword });
-    return createUserData;
+    return await this.users.create({...userData, password: hashedPassword});
   }
 
   public async updateUser(userId: string, userData: User): Promise<User> {
