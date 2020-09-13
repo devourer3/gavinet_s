@@ -1,4 +1,3 @@
-import * as bcrypt from 'bcrypt';
 import HttpException from '../exceptions/HttpException';
 import {isEmptyObject} from '../utils/util';
 import questionModel from '../models/question.model';
@@ -11,15 +10,15 @@ class QuestionService {
   public question = questionModel;
 
   public async findAllQuestions(): Promise<QuestionInterface[]> {
-    return this.question.find();
+    return this.question.find().sort([['_id', -1]]); // 1(정순) -1(역순)
   }
 
-  public async findQuestionByTitle(query: string): Promise<QuestionInterface[]> {
+  public async findQuestionByTitleOrContent(query: string): Promise<QuestionInterface[]> {
     let likeRegex:RegExp = new RegExp(".*" + query + ".*"); // like query
     const findQuestion = await this.question.find().or(
       [{articleTitle: likeRegex},
         {articleContent: likeRegex}]
-    );
+    ).sort([['_id', -1]]);
     // const findQuestion = await this.question.find({articleTitle: new RegExp('^'+query+'$', "i")});
     if (!findQuestion) throw new HttpException(409, "There are no questions what you want.");
     return findQuestion;
@@ -32,6 +31,14 @@ class QuestionService {
     // const createResData: QuestionInterface = await this.Question.create({...resData});
     // return createResData;
     return await this.question.create({...questionData});
+  }
+
+  public async deleteQuestion(_id: string): Promise<QuestionInterface> {
+    try {
+      return await this.question.findByIdAndDelete(_id);
+    } catch (err) {
+      throw new HttpException(409, `Delete failed`);
+    }
   }
 }
 
