@@ -20,6 +20,7 @@ class QuestionRoute implements Route {
     this.router.post(`${this.path}/search`, this.questionController.findQuestions);
     this.router.post(`${this.path}/create`, this.questionController.createQuestion);
     this.router.delete(`${this.path}/delete/:id`, this.questionController.deleteQuestion);
+    this.router.put(`${this.path}/modify/:id`, this.questionController.modifyQuestion);
   };
 
   // this.router.get(`${this.path}`, this.usersController.getUsers);

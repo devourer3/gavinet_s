@@ -42,7 +42,9 @@ class App {
       this.app.use(hpp());
       this.app.use(helmet());
       this.app.use(logger('combined'));
-      this.app.use(cors({exposedHeaders: 'Authorization', credentials: true}));
+      this.app.use(cors({
+                          exposedHeaders: 'Authorization', credentials: true
+                        })); // 커스텀 헤더 설정
       // this.app.use(cors({origin: 'your.domain.com', credentials: true}));
     } else {
       this.app.use(logger('dev'));
